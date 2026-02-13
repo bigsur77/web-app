@@ -34,7 +34,7 @@ jobs:
       
       # Build the project
       - name: Build
-        run: npm run build -- --configuration production --base-href=/your-repo-name/
+        run: npm run build -- --configuration production --base-href=/web-app/
       
       # Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
