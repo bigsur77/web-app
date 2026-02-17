@@ -1,46 +1,51 @@
-name: Build and Deploy Angular App
+name: Deploy to EC2
 
-# Disabled: deploy-ec2.yml is used for deploy on push to main
 on:
-  workflow_dispatch:  # run manually only
-  # push:
-  #   branches:
-  #     - main
-  # pull_request:
-  #   branches:
-  #     - main
-
-permissions:
-  contents: write
+  push:
+    branches: [ main ]
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
       # Checkout code
       - name: Checkout
         uses: actions/checkout@v4
-      
+
       # Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'  # or your preferred version
+          node-version: '22'
           cache: 'npm'
-      
+
       # Install dependencies
       - name: Install dependencies
         run: npm ci
-      
-      # Build the project
+
+      # Build Angular app
       - name: Build
-        run: npm run build -- --configuration production --base-href=/web-app/
-      
-      # Deploy to GitHub Pages
-      - name: Deploy to GitHub Pages
-        if: github.ref == 'refs/heads/main'
-        uses: peaceiris/actions-gh-pages@v3
+        run: npm run build -- --configuration production
+
+      # Copy files to EC2
+      - name: Deploy to EC2
+        uses: appleboy/scp-action@v0.1.7
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist/web-app/browser
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "./dist/web-app/browser/*"
+          target: "/var/www/html/"
+          strip_components: 3
+
+      # Restart nginx
+      - name: Restart Nginx
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            sudo systemctl restart nginx
+            echo "✅ Deployment complete!"
