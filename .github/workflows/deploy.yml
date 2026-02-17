@@ -1,12 +1,14 @@
 name: Build and Deploy Angular App
 
+# Disabled: deploy-ec2.yml is used for deploy on push to main
 on:
-  push:
-    branches:
-      - main  # or master, depending on your default branch
-  pull_request:
-    branches:
-      - main
+  workflow_dispatch:  # run manually only
+  # push:
+  #   branches:
+  #     - main
+  # pull_request:
+  #   branches:
+  #     - main
 
 permissions:
   contents: write
