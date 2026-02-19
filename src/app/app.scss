@@ -1,0 +1,145 @@
+.layout-wrapper {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.sidebar {
+  width: 240px;
+  background: rgba(47, 53, 66, 0.85);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  padding-top: 12px;
+  overflow-y: auto;
+  transition: margin-left 0.3s ease;
+}
+@media (max-width: 768px) {
+  .layout-wrapper {
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .main-content {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+.sidebar.closed {
+  margin-left: -240px;
+}
+
+.sidebar-toggle-btn {
+  position: fixed;
+  top: 3%;
+  transform: translateY(-50%);
+
+  left: 0;
+  width: 15px;
+  height: 56px;
+  padding: 0;
+
+  background: rgba(47, 53, 66, 0.35);
+  backdrop-filter: blur(6px);
+  border: none;
+  border-radius: 0 10px 10px 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  z-index: 3000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  transition:
+    left 0.3s ease,
+    background 0.2s;
+
+  svg {
+    width: 16px;
+    height: 16px;
+    color: #fff;
+    transition: transform 0.3s ease;
+  }
+}
+
+.sidebar-toggle-btn.open {
+  left: 240px;
+
+  svg {
+    transform: rotate(180deg);
+  }
+}
+
+.sidebar-toggle-btn:hover {
+  background: rgba(47, 53, 66, 0.6);
+}
+
+.sidebar-title {
+  font-size: 20px;
+  padding: 16px;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 14px 20px;
+  color: #dfe4ea;
+  text-decoration: none;
+  font-size: 15px;
+  transition: background 0.2s;
+  cursor: pointer;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  &.active {
+    background: rgba(96, 160, 255, 0.25);
+    color: #fff;
+    font-weight: 600;
+    border-left: 4px solid #1e90ff;
+  }
+}
+
+.main-content {
+  flex: 1;
+  overflow: auto;
+  padding: 20px;
+  background: #f1f2f6;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -240px;
+    height: 100%;
+    z-index: 2000;
+    transition: left 0.3s ease;
+  }
+
+  .sidebar.open {
+    left: 0;
+  }
+
+  .sidebar-toggle-btn {
+    top: 20px;
+    transform: none;
+    background: rgba(47, 53, 66, 0.6);
+  }
+
+  .sidebar-toggle-btn.open {
+    display: none;
+  }
+}
